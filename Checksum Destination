@@ -1,0 +1,39 @@
+create database DW_DESTINATION
+go
+USE DW_DESTINATION
+
+
+Create table DimEmployeeDetails
+(
+Emp_Id int PRIMARY KEY,
+Emp_Name Varchar(100),
+Emp_Gender char(1),
+Country Varchar(100),
+Etl_INIT_Date datetime default getdate(),
+Etl_UPD_Date datetime,
+Checksum_Store int		
+)
+
+SELECT * FROM DimEmployeeDetails
+
+
+UPDATE DimEmployeeDetails
+SET 
+Emp_Name = ?,
+Country = ?,
+Etl_UPD_Date = GETDATE(),
+Checksum_Store = ?
+WHERE
+Emp_Id = ?
+
+
+SELECT * FROM DimEmployeeDetails
+
+
+SELECT * FROM [dbo].[sysssislog]
+
+-- TECHNIQ 1: SCD				: EASY				SLOW
+-- TECHNIQ 2: CDC				: FASTER			ONLY FOR SQL SERVER SOURCES
+-- TECHNIQ 3: CHECKSUM			: FLEXIBLE			ADDITIONAL CHECKSUM COMPUTATIONS
+
+NEXT::: 
