@@ -1,0 +1,126 @@
+-- THIS IS THE SOURCE DATA SCRIPT
+CREATE DATABASE SOURCEDATABASE
+GO
+
+USE SOURCEDATABASE
+
+Create table Customer
+      (
+       CustomerID int identity PRIMARY KEY,
+       FName varchar(100) not null,
+       MName varchar(100) null,
+       LName varchar(100) not null,
+       Address1 varchar(100) not null,
+       Address2 varchar(100)  null,
+       City varchar(100) not null,
+       State char(2) not null,
+       Zip  varchar(12) not null ,
+       PhoneNo varchar(12) not null, 
+      )
+
+
+insert into Customer (FName,MName,LName,Address1,Address2,City,State, Zip,PhoneNo)
+select 'Joe' ,'', 'Black', '1234 winding way','', 'Minneaplis', 'MN', '55432', '6121111234'  
+
+insert into Customer (FName,MName,LName,Address1,Address2,City,State, Zip,PhoneNo)
+select 'Samuel' ,'', 'Greg', '1999 Hall way','', 'Minneaplis', 'MN', '55532', '612xx11234'  
+
+insert into Customer (FName,MName,LName,Address1,Address2,City,State, Zip,PhoneNo)
+select 'A' ,'', 'Adams', '500 Reed st','', 'Minneaplis', 'MN', '55532', '612xx11734'  
+
+insert into Customer (FName,MName,LName,Address1,Address2,City,State, Zip,PhoneNo)
+select 'Sam' ,'', 'George', '444 Reed st','', 'Minneaplis', 'MN', '55532', '612xx34734'  
+
+SELECT * FROM Customer
+
+
+
+
+-- NOW DESIGN DWH TABLE. THEN DESIGN SSIS PACKAGE, EXECUTE THE ETL PACKAGE FOR DIMENSION LOADS USING SSDT TOOL.  4 ROWS ARE LOADED.
+
+
+UPDATE Customer
+SET Address2 = 'NEW ADDR1' WHERE CustomerID = 1
+
+
+
+insert into Customer (FName,MName,LName,Address1,Address2,City,State, Zip,PhoneNo)
+select 'Sam2' ,'', 'George', '444 Reed st','', 'Minneaplis', 'MN', '55532', '612xx34734'  
+
+insert into Customer (FName,MName,LName,Address1,Address2,City,State, Zip,PhoneNo)
+select 'Sam3' ,'', 'George', '444 Reed st','', 'Minneaplis', 'MN', '55532', '612xx34734'  
+
+
+
+
+-- NOW, EXECUTE THE SSIS PACKAGE ONCE AGAIN.  VERIFY THAT DWH TABLE GETS ABOVE INREMENTAL CHANGES AUTOMATICALLY.
+
+
+-- FOR SCD TYPE 2 PACKAGE EXAMPLE :
+TRUNCATE TABLE Customer
+
+
+insert into Customer (FName,MName,LName,Address1,Address2,City,State, Zip,PhoneNo)
+select 'Joe' ,'', 'Black', '1234 winding way','', 'Minneaplis', 'MN', '55432', '6121111234'  
+
+insert into Customer (FName,MName,LName,Address1,Address2,City,State, Zip,PhoneNo)
+select 'Samuel' ,'', 'Greg', '1999 Hall way','', 'Minneaplis', 'MN', '55532', '612xx11234'  
+
+insert into Customer (FName,MName,LName,Address1,Address2,City,State, Zip,PhoneNo)
+select 'A' ,'', 'Adams', '500 Reed st','', 'Minneaplis', 'MN', '55532', '612xx11734'  
+
+insert into Customer (FName,MName,LName,Address1,Address2,City,State, Zip,PhoneNo)
+select 'Sam' ,'', 'George', '444 Reed st','', 'Minneaplis', 'MN', '55532', '612xx34734'  
+
+SELECT * FROM Customer
+
+-- NOW, DESIGN THE SSIS PACAKGE FOR ETL TYPE 2 SCD LOADS
+
+insert into Customer (FName,MName,LName,Address1,Address2,City,State, Zip,PhoneNo)
+select 'A2' ,'', 'Adams2', '500 Reed st','', 'Minneaplis', 'MN', '55532', '612xx11734'  
+insert into Customer (FName,MName,LName,Address1,Address2,City,State, Zip,PhoneNo)
+select 'Sam2' ,'', 'George2', '444 Reed st','', 'Minneaplis', 'MN', '55532', '612xx34734'  
+
+update Customer
+set PhoneNo = '666666'
+where 
+CustomerID in (1,2,3)
+
+-- EXECUTE SSIS PACAKGE FOR ETL TYPE 2 SCD LOADS
+
+update Customer
+set Address2 = 'ADDR 2'
+where 
+CustomerID in (1)
+
+-- EXECUTE SSIS PACAKGE FOR ETL TYPE 2 SCD LOADS
+
+
+update Customer
+set PhoneNo = '777777'
+where 
+CustomerID in (1,2)
+
+
+
+/*
+-- STEP 1: DEFINE SOURCE TABLE, INSERT 4 ROWS
+-- STEP 2: DEFINE DWH TABLE. NO ROWS.
+-- STEP 3: DEFINE SSIS PACKAGE USING SCD TRANSFORMATION
+-- STEP 4: EXECUTE THE SSIS PACKAGE  >> VERIFY THE INITIAL LOADS [4 ROWS] IN THE DWH TABLE
+-- STEP 5: INSERT 2 MORE NEW ROWS AND UPDATE 3 EXISTING ROWS AT THE SOURCE.
+-- STEP 6: EXECUTE THE SSIS PACKAGE  >> VERIFY THE INCREMENTAL LOADS [2 NEW ROWS + 3 EXISTING ROW UPDATES] IN THE DWH TABLE
+
+-- STEP 7: FOR HISTORICAL DATA :  PRESERVE OLD PHONE NUMBER WHENEVER NEW PHONE NUMBER ARRIVES.
+			TRUNCATE SOURCE TABLE.  INSERT 4 ROWS.
+			DEFINE DWH TABLE. NO ROWS.
+			DEFINE SSIS PACKAGE USING SCD TRANSFORMATION
+			EXECUTE THE SSIS PACKAGE  >> VERIFY THE INITIAL LOADS [4 ROWS] IN THE DWH TABLE
+			UPDATE PHONE NUMBER RECORD (EX: CUSTOMERID #1,2,3) AT THE SOURCE.
+			EXECUTE THE SSIS PACKAGE  >> VERIFY THE HISTORICAL LOADS [3 ROWS] IN THE DWH TABLE
+			UPDATE ADDRESS.
+			EXECUTE THE SSIS PACKAGE  >> VERIFY THE UPDATES IN HISTORICAL 3 ROWS IN THE DWH TABLE
+
+-- TASK : IMPLEMENT SSIS LOGGING FOR ABOVE PACKAGE.
+-- TASK : IMPLEMENT TRANSACTION OPTION FOR ABOVE PACKAGE.
+*/
