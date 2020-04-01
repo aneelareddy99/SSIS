@@ -1,0 +1,73 @@
+CREATE DATABASE DB_SOURCE
+
+USE [DB_SOURCE]
+
+Create table EmployeeDetails
+(
+Emp_Id int,
+Emp_Name Varchar(100),
+Emp_Gender char(1),
+Country Varchar(100)
+)
+
+-- TRUNCATE TABLE EmployeeDetails
+
+Insert into EmployeeDetails Values(1,'Adam','m','India');   
+Insert into EmployeeDetails Values(2,'Luke','m','India');
+Insert into EmployeeDetails Values(3,'VINK','m','USA');
+Insert into EmployeeDetails Values(4,'JEN','m','China');
+Insert into EmployeeDetails Values(5,'JOHY','m','Japan');
+Insert into EmployeeDetails Values(6,'JEFF','m','India');
+Insert into EmployeeDetails Values(7,'Femina','m','India');
+Insert into EmployeeDetails Values(8,'Sheetal','m','USA');
+Insert into EmployeeDetails Values(9,'John M','f','China');
+
+
+SELECT * FROM EmployeeDetails
+
+
+-- NOW DESIGN THE ETL PACKAGE FOR DIMENSION TABLE LOADS.
+-- EXECUTE THE PACKAGE.
+
+Insert into EmployeeDetails Values(18,'Sheetal2','m','USA');
+Insert into EmployeeDetails Values(19,'John M2','f','China');
+
+
+UPDATE EmployeeDetails
+SET Country = 'INDIANA' WHERE Emp_Id IN (1)
+
+
+
+
+
+SELECT * FROM EmployeeDetails
+
+
+
+
+Insert into EmployeeDetails Values(10,'Sheetal2','m','USA');
+Insert into EmployeeDetails Values(11,'John M2','f','China');
+
+
+
+/*
+FOR FASTER SEARCH (LOOKUP)  @ ETL AND DATA COMPARISONS:
+
+		STEP 1: USE "CACHE" TRANSFORM AND PRE-LOAD THE DWH DATA INTO BUFFER (MEMORY)
+		STEP 2: RUN THE ACTUAL ETL TRANSFORMATION UNDER "FULL CACHE" MODE
+		
+		DURING CACHE TRANFORM USAGE ONE MEMORY CONNECTION IS CREATED. THIS INCLUDES A caw FILE TO STORE THE SEARCHABLE
+		LOOKUP DATA IN VIRTUAL MEMORY.
+		WE NEED TO SPECIFY THE LOCATION FOR THIS "FILE CACHE".
+
+
+		PARTIAL CACHE CAN BE USED ALONG WITH OLE DB DESTINATION CONNECTION TYPE.
+		IN ADVANCED PROPERTIES PAGE @ LOOKUP TRANSFORMATION : WE NEED TO SPECIFY THE CACHE LIMITS AS BELOW":
+					1. 32BIT SSIS RUNTIME ENVIRONMENT 
+					2. 64BIT SSIS RUNTIME ENVIRONMENT
+
+					3. CACHE ALLOCATION FOR MATCHED DATA
+					4. CACHE ALLOCATION FOR NO MATCH DATA */
+
+*/
+	
