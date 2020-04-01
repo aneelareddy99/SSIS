@@ -1,0 +1,23 @@
+-- ON DESTINATION SITE:
+
+USE DW_DESTINATION 
+
+GO
+Create table DimCustomer_Type2
+      (
+	   CustomerKey int identity PRIMARY KEY,   -- SURROGATE KEY : AN ARTIFICIALLY ADDED KEY FOR IDENTIFYING UNIQUE ROW VALUES. ALTERNATE KEYS
+       CustomerID int ,
+       FName varchar(100) not null,
+       MName varchar(100) null,
+       LName varchar(100) not null,
+       Address1 varchar(100) not null,
+       Address2 varchar(100)  null,
+       City varchar(100) not null,
+       State char(2) not null,
+       Zip  varchar(12) not null ,
+       PhoneNo varchar(12) not null, 
+	   Etl_Status bit,							-- TO IDENTIFY NEW ROWS AND OLD (OUTDATED, HISTORY) ROWS
+	   Etl_Date datetime default getdate()
+      )
+
+SELECT * FROM DimCustomer_Type2
